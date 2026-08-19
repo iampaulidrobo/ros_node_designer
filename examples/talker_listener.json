@@ -1,0 +1,28 @@
+{
+  "nodes": [
+    {
+      "id": "1",
+      "type": "publisher",
+      "node_name": "publisher1",
+      "topic": "/chatter",
+      "message_type": "std_msgs/String",
+      "x": -260,
+      "y": -40
+    },
+    {
+      "id": "2",
+      "type": "subscriber",
+      "node_name": "subscriber1",
+      "topic": "/chatter",
+      "message_type": "std_msgs/String",
+      "x": 160,
+      "y": -40
+    }
+  ],
+  "connections": [
+    {
+      "from": "1",
+      "to": "2"
+    }
+  ]
+}

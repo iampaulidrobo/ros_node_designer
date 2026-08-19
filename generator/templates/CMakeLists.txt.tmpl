@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.0.2)
+project({{PACKAGE_NAME}})
+
+## Compile as C++14
+add_compile_options(-std=c++14)
+
+## Find catkin and required message packages
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+{{FIND_PACKAGE_DEPS}})
+
+catkin_package(
+  CATKIN_DEPENDS roscpp{{CATKIN_DEPENDS}}
+)
+
+include_directories(
+  ${catkin_INCLUDE_DIRS}
+)
+
+## Executables (one per node in the design)
+{{EXECUTABLES}}
