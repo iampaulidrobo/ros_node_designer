@@ -1,0 +1,195 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--vscode-font-family, sans-serif);
+  font-size: var(--vscode-font-size, 13px);
+  color: var(--vscode-editor-foreground, #ccc);
+  background: var(--vscode-editor-background, #1e1e1e);
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ---- Toolbar ---- */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--vscode-panel-border, #454545);
+  background: var(--vscode-editor-background, #1e1e1e);
+  flex-shrink: 0;
+}
+
+.toolbar button {
+  color: var(--vscode-button-foreground, #fff);
+  background: var(--vscode-button-background, #0e639c);
+  border: none;
+  border-radius: 2px;
+  padding: 4px 10px;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+.toolbar button:hover {
+  background: var(--vscode-button-hoverBackground, #1177bb);
+}
+
+.toolbar__separator {
+  width: 1px;
+  align-self: stretch;
+  background: var(--vscode-panel-border, #454545);
+  margin: 0 4px;
+}
+
+/* ---- Body layout ---- */
+.app__body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.app__canvas {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+
+/* ---- Property panel ---- */
+.property-panel {
+  width: 260px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--vscode-panel-border, #454545);
+  background: var(--vscode-sideBar-background, #252526);
+  padding: 12px;
+  overflow-y: auto;
+}
+
+.property-panel__empty {
+  color: var(--vscode-descriptionForeground, #999);
+  font-style: italic;
+}
+
+.property-panel__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 14px;
+  font-size: 12px;
+}
+
+.property-panel__field span {
+  color: var(--vscode-descriptionForeground, #999);
+}
+
+.property-panel__field input,
+.property-panel__field select {
+  background: var(--vscode-input-background, #3c3c3c);
+  color: var(--vscode-input-foreground, #ccc);
+  border: 1px solid var(--vscode-input-border, transparent);
+  border-radius: 2px;
+  padding: 4px 6px;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+/* ---- Status bar ---- */
+.status-bar {
+  flex-shrink: 0;
+  min-height: 22px;
+  padding: 2px 10px;
+  font-size: 12px;
+  border-top: 1px solid var(--vscode-panel-border, #454545);
+  background: var(--vscode-statusBar-background, #007acc);
+  color: var(--vscode-statusBar-foreground, #fff);
+}
+
+/* ---- ROS entity nodes ---- */
+.ros-node {
+  min-width: 160px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  background: var(--vscode-editorWidget-background, #252526);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.ros-node--selected {
+  box-shadow: 0 0 0 2px rgba(90, 169, 255, 0.4);
+}
+
+.ros-node__header {
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #0b0f14;
+}
+
+.ros-node__body {
+  padding: 8px 10px 10px;
+}
+
+.ros-node__name {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--vscode-editor-foreground, #ccc);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ros-node__topic,
+.ros-node__msgtype {
+  font-size: 11px;
+  color: var(--vscode-descriptionForeground, #999);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+.ros-node__handle {
+  width: 8px;
+  height: 8px;
+  background: var(--vscode-editor-foreground, #ccc);
+  border: none;
+}
+
+/* NODE: plain rounded rectangle (default .ros-node styling above). */
+
+/* TOPIC: ellipse / pill silhouette. */
+.ros-node--topic {
+  border-radius: 999px;
+}
+.ros-node--topic .ros-node__header {
+  border-radius: 0;
+}
+
+/* SERVICE: hexagon with chevron notches on the left/right. */
+.ros-node--service {
+  clip-path: polygon(8% 0%, 92% 0%, 100% 50%, 92% 100%, 8% 100%, 0% 50%);
+  border-radius: 0;
+}
+.ros-node--service .ros-node__body {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* ACTION: diamond / double-arrow silhouette, pointed left and right. */
+.ros-node--action {
+  clip-path: polygon(0% 50%, 16% 0%, 84% 0%, 100% 50%, 84% 100%, 16% 100%);
+  border-radius: 0;
+}
+.ros-node--action .ros-node__body {
+  padding-left: 26px;
+  padding-right: 26px;
+}

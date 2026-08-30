@@ -1,0 +1,50 @@
+{
+  "name": "pauli-node-designer",
+  "displayName": "Pauli's ROS Node Designer",
+  "description": "Visual editor for designing a ROS 2 pub/sub node graph and generating a compile-ready ament_cmake package.",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "main": "./dist/extension.js",
+  "categories": [
+    "Other"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "rosNodeDesigner.open",
+        "title": "ROS Node Designer: Open Designer"
+      },
+      {
+        "command": "rosNodeDesigner.newProject",
+        "title": "ROS Node Designer: New Project"
+      },
+      {
+        "command": "rosNodeDesigner.saveProject",
+        "title": "ROS Node Designer: Save Project"
+      },
+      {
+        "command": "rosNodeDesigner.openProject",
+        "title": "ROS Node Designer: Open Project"
+      }
+    ]
+  },
+  "scripts": {
+    "postinstall": "npm --prefix webview-ui install --no-audit --no-fund",
+    "compile": "npm run compile:webview && npm run compile:extension",
+    "compile:extension": "node esbuild.js",
+    "compile:webview": "npm --prefix webview-ui run build",
+    "watch:extension": "node esbuild.js --watch",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "smoke": "node out/smoke.js",
+    "smoke:build": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.23.0",
+    "typescript": "^5.5.4"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "java.import.gradle.enabled": false,
+  "java.import.maven.enabled": false,
+  "java.configuration.updateBuildConfiguration": "disabled",
+  "java.autobuild.enabled": false,
+  "gradle.nestedProjects": false,
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/out/**": true,
+    "**/python_app/.venv/**": true,
+    "**/python_app/**/__pycache__/**": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/out": true,
+    "**/python_app/.venv": true,
+    "**/python_app/**/__pycache__": true
+  },
+  "files.exclude": {
+    "**/python_app/.venv": true,
+    "**/python_app/**/__pycache__": true
+  }
+}
