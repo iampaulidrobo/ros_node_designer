@@ -27,9 +27,3 @@ package from that graph.
 - `templates/` -- the ROS 2 package templates used by the generator, copied
   verbatim from the original prototype and read from disk at generation time
   (not bundled into the extension's JS).
-
-## Origin
-
-This extension is a reimplementation of a PySide6 desktop prototype of the
-same tool. That original Python/Qt version is kept for reference under
-[`python_app/`](python_app/) and is not part of the extension build.

@@ -7,19 +7,11 @@
   "files.watcherExclude": {
     "**/node_modules/**": true,
     "**/dist/**": true,
-    "**/out/**": true,
-    "**/python_app/.venv/**": true,
-    "**/python_app/**/__pycache__/**": true
+    "**/out/**": true
   },
   "search.exclude": {
     "**/node_modules": true,
     "**/dist": true,
-    "**/out": true,
-    "**/python_app/.venv": true,
-    "**/python_app/**/__pycache__": true
-  },
-  "files.exclude": {
-    "**/python_app/.venv": true,
-    "**/python_app/**/__pycache__": true
+    "**/out": true
   }
 }
