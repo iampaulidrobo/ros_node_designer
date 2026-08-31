@@ -41,12 +41,16 @@ const RosFlowNodeBase: React.FC<Props> = ({ data, selected, type }) => {
         <div className="ros-node__name" title={rosNode.nodeName}>
           {rosNode.nodeName}
         </div>
-        <div className="ros-node__topic" title={rosNode.topic}>
-          {rosNode.topic}
-        </div>
-        <div className="ros-node__msgtype" title={rosNode.messageType}>
-          {rosNode.messageType}
-        </div>
+        {rosNode.topic && (
+          <div className="ros-node__topic" title={rosNode.topic}>
+            {rosNode.topic}
+          </div>
+        )}
+        {rosNode.messageType && (
+          <div className="ros-node__msgtype" title={rosNode.messageType}>
+            {rosNode.messageType}
+          </div>
+        )}
       </div>
       <Handle type="source" position={Position.Right} className="ros-node__handle" />
     </div>

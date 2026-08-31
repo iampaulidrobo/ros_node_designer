@@ -19,7 +19,7 @@ import { Graph, ConnectionValidationError } from "./model/Graph";
 import { NodeType, nodeTypeLabel } from "./model/NodeType";
 import { RosNode } from "./model/RosNode";
 import { Connection } from "./model/Connection";
-import { defaultMessageType } from "./utils/messageTypes";
+import { defaultMessageType, messageKindForEntityType } from "./utils/messageTypes";
 import { sanitizeIdentifier } from "./utils/naming";
 import { nodeTypes, RosFlowNodeData } from "./components/RosFlowNode";
 import Toolbar from "./components/Toolbar";
@@ -75,9 +75,21 @@ const Designer: React.FC = () => {
       const label = nodeTypeLabel(type);
       const count = graph.nodes.filter((n) => n.type === type).length + 1;
       const nodeName = `${label} #${count}`;
-      const topic = `/${label.toLowerCase()}_${count}`;
       const center = getViewportCenter();
-      const rosNode = graph.createNode(type, nodeName, topic, defaultMessageType(), center.x, center.y);
+      // Cascade each new node a little further from center so repeated adds (e.g.
+      // several topics in a row) don't stack exactly on top of each other and
+      // look like nothing happened.
+      const cascade = (graph.nodes.length % 8) * 32;
+      const x = center.x + cascade;
+      const y = center.y + cascade;
+
+      // A "node" entity has no topic/message-type identity of its own -- it can
+      // host any number of publishers, subscribers, service/action servers and
+      // clients, each typed by whatever it ends up wired to.
+      const topic = type === "node" ? "" : `/${label.toLowerCase()}_${count}`;
+      const messageType = type === "node" ? "" : defaultMessageType(messageKindForEntityType(type));
+
+      const rosNode = graph.createNode(type, nodeName, topic, messageType, x, y);
       setNodes((nds) => [...nds, toRFNode(rosNode)]);
     },
     [getViewportCenter, setNodes]
@@ -136,36 +148,34 @@ const Designer: React.FC = () => {
   const handlePropertyChange = useCallback(
     (patch: Partial<Pick<RosNode, "nodeName" | "topic" | "messageType">>) => {
       if (!selectedId) return;
-      const graph = graphRef.current;
-      const node = graph.getNode(selectedId);
+      const node = graphRef.current.getNode(selectedId);
       if (!node) return;
       Object.assign(node, patch);
-
-      // Mirror the original app's behavior: after any field edit, re-validate all
-      // existing connections and drop ones whose endpoints no longer share a
-      // message type.
-      const stillValidKeys = new Set<string>();
-      const toRemove: Connection[] = [];
-      for (const c of graph.connections) {
-        const a = graph.getNode(c.fromId);
-        const b = graph.getNode(c.toId);
-        if (a && b && a.messageType === b.messageType) {
-          stillValidKeys.add(`${c.fromId}->${c.toId}`);
-        } else {
-          toRemove.push(c);
-        }
-      }
-      for (const c of toRemove) {
-        graph.removeConnection(c);
-      }
-
       setNodes((nds) =>
         nds.map((n) => (n.id === selectedId ? { ...n, data: { rosNode: { ...node } } } : n))
       );
-      setEdges((eds) => eds.filter((e) => stillValidKeys.has(`${e.source}->${e.target}`)));
     },
-    [selectedId, setNodes, setEdges]
+    [selectedId, setNodes]
   );
+
+  // Every topic/service/action a selected entity is wired to (for a "node", this
+  // is its full set of publishers/subscribers/service & action servers/clients;
+  // for a topic/service/action, it's the nodes wired to it).
+  const connectedInterfaces = useMemo(() => {
+    if (!selectedId) return [];
+    const nodeMap = new Map(nodes.map((n) => [n.id, n.data.rosNode]));
+    const result: { outgoing: boolean; entity: RosNode }[] = [];
+    for (const e of edges) {
+      if (e.source === selectedId && e.target) {
+        const entity = nodeMap.get(e.target);
+        if (entity) result.push({ outgoing: true, entity });
+      } else if (e.target === selectedId && e.source) {
+        const entity = nodeMap.get(e.source);
+        if (entity) result.push({ outgoing: false, entity });
+      }
+    }
+    return result;
+  }, [selectedId, nodes, edges]);
 
   const handleNewProject = useCallback(() => {
     graphRef.current.clear();
@@ -257,7 +267,11 @@ const Designer: React.FC = () => {
             <Controls />
           </ReactFlow>
         </div>
-        <PropertyPanel selectedNode={selectedRosNode} onChange={handlePropertyChange} />
+        <PropertyPanel
+          selectedNode={selectedRosNode}
+          connectedInterfaces={connectedInterfaces}
+          onChange={handlePropertyChange}
+        />
       </div>
       <div className="status-bar">{status}</div>
     </div>

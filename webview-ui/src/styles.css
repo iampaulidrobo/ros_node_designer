@@ -101,6 +101,63 @@ body {
   font-family: inherit;
 }
 
+.property-panel__interfaces {
+  margin-top: 6px;
+  border-top: 1px solid var(--vscode-panel-border, #454545);
+  padding-top: 10px;
+}
+
+.property-panel__interfaces-title {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--vscode-descriptionForeground, #999);
+  margin-bottom: 6px;
+}
+
+.property-panel__interfaces-empty {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--vscode-descriptionForeground, #999);
+}
+
+.property-panel__interfaces-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.property-panel__interface {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: var(--vscode-editorWidget-background, #2d2d2d);
+  font-size: 11px;
+}
+
+.property-panel__interface-role {
+  font-weight: 700;
+  color: var(--vscode-editor-foreground, #ccc);
+}
+
+.property-panel__interface-name {
+  color: var(--vscode-editor-foreground, #ccc);
+}
+
+.property-panel__interface-detail {
+  color: var(--vscode-descriptionForeground, #999);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* ---- Status bar ---- */
 .status-bar {
   flex-shrink: 0;

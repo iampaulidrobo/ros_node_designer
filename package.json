@@ -3,7 +3,14 @@
   "displayName": "Pauli's ROS Node Designer",
   "description": "Visual editor for designing a ROS 2 pub/sub node graph and generating a compile-ready ament_cmake package.",
   "version": "0.1.0",
+  "publisher": "pauli",
   "private": true,
+  "icon": "resources/icon.png",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iampaulidrobo/ros_node_designer.git"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },

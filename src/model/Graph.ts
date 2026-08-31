@@ -29,6 +29,23 @@ const ALLOWED_PAIRS = new Set<string>([
   "action:node",
 ]);
 
+/**
+ * Human-readable "only one owner" rule for a topic/service/action, used when a
+ * second node tries to connect as its owner (see validateConnection).
+ */
+function ownerRuleMessage(entityType: NodeType): string {
+  switch (entityType) {
+    case "topic":
+      return "A topic can only have one publisher node.";
+    case "service":
+      return "A service can only have one server node.";
+    case "action":
+      return "An action can only have one server node.";
+    default:
+      return "This entity can only have one owning node.";
+  }
+}
+
 /** The design graph: the single source of truth for a project. Holds all nodes and
  * connections, enforces the connection rules, and provides JSON serialization for
  * Save/Open. Contains no UI code. */
@@ -115,26 +132,26 @@ export class Graph {
       };
     }
 
-    if (src.type === "node" && dst.type === "topic") {
-      const hasPublisher = this._connections.some((c) => {
+    if (this._connections.some((c) => c.fromId === fromId && c.toId === toId)) {
+      return { ok: false, message: "That connection already exists." };
+    }
+
+    // A node -> entity connection means the node owns/serves that topic, service
+    // or action (mirrors "publisher"). Only one node may own a given entity, per
+    // ROS semantics (one publisher per topic, one server per service/action) --
+    // any number of other nodes may still consume it (subscribe / call / send
+    // goals), and a single node may own or consume any number of different
+    // topics, services and actions -- there is no requirement that a node's
+    // interfaces share a message type, since a node is not itself typed.
+    if (src.type === "node" && dst.type !== "node") {
+      const hasOwner = this._connections.some((c) => {
         if (c.toId !== toId) return false;
         const other = this.getNode(c.fromId);
         return other !== undefined && other.type === "node";
       });
-      if (hasPublisher) {
-        return { ok: false, message: "A topic can only have one publisher node." };
+      if (hasOwner) {
+        return { ok: false, message: ownerRuleMessage(dst.type) };
       }
-    }
-
-    if (src.messageType !== dst.messageType) {
-      return {
-        ok: false,
-        message: `Message types do not match: '${src.messageType}' → '${dst.messageType}'.`,
-      };
-    }
-
-    if (this._connections.some((c) => c.fromId === fromId && c.toId === toId)) {
-      return { ok: false, message: "That connection already exists." };
     }
 
     return { ok: true, message: "" };
