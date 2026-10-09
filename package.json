@@ -2,7 +2,7 @@
   "name": "Pauli-node-designer",
   "displayName": "Pauli's ROS Node Designer",
   "description": "Visual editor for designing a ROS 2 pub/sub node graph and generating a compile-ready ament_cmake package.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "pauli",
   "private": true,
   "icon": "resources/icon.png",
